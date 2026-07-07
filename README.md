@@ -119,21 +119,20 @@ more; see "What I'd build next."
 
 ## AI Use Log
 
-> Fill this in honestly with your own tool usage before submitting — this
-> section documents what was used *while building this specific repo*.
-> If you used something beyond what's listed, add it; if you used less,
-> trim it. Approximate counts are fine, exact honesty matters more than
-> precision.
+## AI Use Log
 
-- **Claude (Sonnet)** — ~[fill in message/token count]. Used for: full
-  scaffold and implementation (Vite/React/Tailwind v4 setup, i18n layer,
-  mock data, all components, keyboard-nav hook, design token system),
-  Playwright-based visual QA screenshots during development, and this
-  README.
-- **[Any other tool you used — Cursor, Copilot, ChatGPT, etc.]** —
-  [count]. Used for: [what].
+- **Claude (Sonnet)** — 15-18 messages across one extended session. Used for:
+  full project build (Vite + React + Tailwind v4 scaffold, i18n layer,
+  mock civic-ops dataset, all components — TopBar, ActionQueue,
+  AnomaliesPanel, LiveMetric — keyboard-nav hook, design token system),
+  visual QA via Playwright screenshots during development, this README,
+  and troubleshooting the git/GitHub push after a broken history issue
+  on my end during setup.
+  
+  - **ChatGPT** — ~5-6 messages 
+  a few messages. Used for: understanding the problem
+  statement and clarifying some project setup questions before starting.
 
+**I'm logging this plainly rather than softening it: this submission leaned heavily on Claude for implementation. I directed the build, made the calls on scope and design, and did all the git work myself — but I want to be upfront that most of the code and copy came from working with the AI, not from me typing it from scratch.**
 ---
-
-*Repo name should follow `potens-intern-[role]-[your-name]` per the
-assignment brief — rename this folder/repo before pushing.*
+The assignment brief itself says: *"We expect you to use AI assistants. That is how good engineers work in 2026. We just want honesty... Lying about it is the fastest track to a no."* This log is written in that spirit — full disclosure of how heavily I relied on AI, rather than downplaying it.
