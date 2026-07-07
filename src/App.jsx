@@ -1,122 +1,76 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from 'react'
+import { LangProvider, useLang } from './i18n'
+import TopBar from './components/TopBar'
+import ActionQueue from './components/ActionQueue'
+import AnomaliesPanel from './components/AnomaliesPanel'
+import LiveMetric from './components/LiveMetric'
+import { actionItems, anomalies } from './data/mockData'
+import { useKeyboardNav } from './hooks/useKeyboardNav'
 
-function App() {
-  const [count, setCount] = useState(0)
+function Dashboard() {
+  const { t } = useLang()
+  const [statuses, setStatuses] = useState({}) // id -> 'approved' | 'held'
+  const [selectedId, setSelectedId] = useState(actionItems[0]?.id ?? null)
+  const [daylight, setDaylight] = useState(false)
+  const [lowBandwidth, setLowBandwidth] = useState(false)
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('daylight', daylight)
+  }, [daylight])
+
+  function approve(id) {
+    setStatuses((s) => ({ ...s, [id]: 'approved' }))
+  }
+  function hold(id) {
+    setStatuses((s) => ({ ...s, [id]: 'held' }))
+  }
+
+  useKeyboardNav({
+    items: actionItems,
+    selectedId,
+    onSelect: setSelectedId,
+    onApprove: approve,
+    onHold: hold,
+  })
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="min-h-screen bg-ink">
+      <TopBar
+        daylight={daylight}
+        onToggleDaylight={() => setDaylight((d) => !d)}
+        lowBandwidth={lowBandwidth}
+        onToggleLowBandwidth={() => setLowBandwidth((b) => !b)}
+      />
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      <main className="mx-auto grid max-w-7xl grid-cols-1 gap-4 p-4 md:grid-cols-3 md:p-6">
+        <div className="md:col-span-2">
+          <ActionQueue
+            items={actionItems}
+            statuses={statuses}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            onApprove={approve}
+            onHold={hold}
+          />
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        <div className="flex flex-col gap-4">
+          <LiveMetric lowBandwidth={lowBandwidth} />
+          <AnomaliesPanel anomalies={anomalies} />
+        </div>
+      </main>
+
+      <footer className="mx-auto max-w-7xl px-4 pb-6 text-center text-[11px] text-text-faint md:px-6">
+        {t('shortcutsHint')}
+      </footer>
+    </div>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <LangProvider>
+      <Dashboard />
+    </LangProvider>
+  )
+}
