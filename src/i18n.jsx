@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 /*
   Flat key -> {en, hi} dictionary rather than nested namespaces.
@@ -43,7 +43,6 @@ const strings = {
     en: 'j/k select · a approve · h hold',
     hi: 'j/k चुनें · a स्वीकृत · h रोकें',
   },
-  noneSelected: { en: 'No item selected', hi: 'कोई मामला चयनित नहीं' },
 }
 
 const LangContext = createContext(null)
@@ -52,6 +51,11 @@ export function LangProvider({ children }) {
   const [lang, setLang] = useState('en')
   const t = (key) => strings[key]?.[lang] ?? key
   const toggle = () => setLang((l) => (l === 'en' ? 'hi' : 'en'))
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
+
   return (
     <LangContext.Provider value={{ lang, t, toggle }}>
       {children}

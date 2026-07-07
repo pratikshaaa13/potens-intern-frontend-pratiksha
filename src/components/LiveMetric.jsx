@@ -42,7 +42,10 @@ export default function LiveMetric({ lowBandwidth }) {
         {t('liveMetric')}
       </div>
       <div className="flex items-end justify-between">
-        <span className="font-mono text-4xl font-semibold tabular-nums text-amber">
+        <span
+          className="font-mono text-4xl font-semibold tabular-nums text-amber"
+          aria-live="polite"
+        >
           {value.toLocaleString('en-IN')}
         </span>
         <span
